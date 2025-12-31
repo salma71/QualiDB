@@ -17,6 +17,11 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # 1. TELL THE STEPS TO RUN INSIDE THE 'docs' FOLDER
+    defaults:
+      run:
+        working-directory: ./docs
+        
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,6 +31,8 @@ jobs:
         with:
           ruby-version: '3.1'
           bundler-cache: true
+          # 2. TELL RUBY SETUP WHERE THE GEMFILE IS
+          working-directory: ./docs
           
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -34,13 +41,15 @@ jobs:
         run: bundle install
         
       - name: Build with Jekyll
-        # This command uses the Gemfile to build your site
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          # 3. TELL UPLOAD WHERE THE BUILT SITE ENDED UP
+          path: ./docs/_site
 
   deploy:
     environment:
