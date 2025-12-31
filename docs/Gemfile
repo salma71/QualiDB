@@ -1,4 +1,9 @@
 source "https://rubygems.org"
 
-gem "jekyll"
+# This gem includes Jekyll 3.9 and the remote-theme plugin automatically
+gem "github-pages", group: :jekyll_plugins
+
+# Optional: You can keep this if you want, but strictly speaking,
+# if you are using 'remote_theme' in your config, you don't even need this line.
+# However, keeping it is usually harmless.
 gem "just-the-docs"
