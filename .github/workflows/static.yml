@@ -29,7 +29,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1'
+          ruby-version: '3.3'
           bundler-cache: true
           # 2. TELL RUBY SETUP WHERE THE GEMFILE IS
           working-directory: ./docs
