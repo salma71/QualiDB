@@ -2,7 +2,7 @@ name: Deploy Jekyll site to Pages
 
 on:
   push:
-    branches: ["main"]  # Ensure this matches your branch name (main or master)
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -20,17 +20,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
           bundler-cache: true
+          
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        
+      - name: Install Dependencies
+        run: bundle install
+        
       - name: Build with Jekyll
-        run: jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+        # This command uses the Gemfile to build your site
+        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
