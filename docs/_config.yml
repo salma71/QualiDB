@@ -1,0 +1,32 @@
+title: QualiDB AI
+description: AI-powered Data Governance & Quality Tool.
+remote_theme: just-the-docs/just-the-docs
+
+# Theme Settings
+color_scheme: light
+search_enabled: true
+heading_anchors: true
+
+# Footer
+footer_content: "Copyright &copy; 2025 QualiDB AI"
+
+# Navigation
+aux_links:
+  "View on GitHub": "https://salma71.github.io/QualiDB/"
+
+url: "https://salma71.github.io"
+baseurl: "/QualiDB"
+# --- ADD THIS SECTION ---
+# plugins:
+#   - jekyll-remote-theme
+
+
+
+
+# Mermaid diagrams
+mermaid:
+  version: "10.6.1"
+
+# Head includes
+head_includes:
+  - head_custom.html
