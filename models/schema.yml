@@ -1,0 +1,143 @@
+version: 2
+sources:
+- name: prescient
+  schema: prescient
+  tables:
+  - name: prescient.models
+    description: A table storing machine learning model configurations and metadata
+      for predictive analytics within the Prescient system.
+    columns:
+    - name: name
+      description: A table that stores information about machine learning models,
+        including their configurations, versions, and metadata used for predictive
+        analytics and forecasting within the Prescient platform.
+      data_type: VARCHAR
+    - name: unit
+      description: The unit column stores the measurement unit or unit of measure
+        (e.g., kg, liters, pieces) associated with a model or product in the prescient
+        system.
+      data_type: VARCHAR
+  - name: prescient.modeled_metrics
+    description: A table containing calculated or predicted performance metrics derived
+      from analytical models applied to business data.
+    columns:
+    - name: metricName
+      description: A descriptive identifier for a specific key performance indicator
+        or calculated measure tracked within the prescient analytics platform.
+      data_type: VARCHAR
+    - name: metricValue
+      description: The numerical value of a calculated or predicted metric generated
+        by Prescient's modeling algorithms for a specific entity and time period.
+      data_type: FLOAT
+    - name: processDate
+      description: The date when the modeling calculations or predictions were executed
+        and the metrics were generated in the system.
+      data_type: TIMESTAMP
+    - name: reportedDate
+      description: The date when the financial metric or data point was officially
+        reported or disclosed by the company.
+      data_type: VARCHAR
+    - name: sourceCampaignId
+      description: The unique identifier for the marketing campaign that originally
+        drove traffic or generated the lead, used to attribute conversions and performance
+        metrics back to specific campaign sources.
+      data_type: VARCHAR
+    - name: sourceCampaignName
+      description: The name of the marketing campaign from which the user or conversion
+        originated, used to track and attribute performance to specific promotional
+        efforts.
+      data_type: VARCHAR
+    - name: sourceChannelName
+      description: The name of the marketing channel or traffic source from which
+        a user arrived at the website or platform.
+      data_type: VARCHAR
+    - name: target
+      description: The business entity, product, service, or metric that the modeled
+        prediction or forecast is attempting to measure or predict.
+      data_type: VARCHAR
+    - name: targetChannelName
+      description: The name of the marketing channel or platform where advertising
+        spend is being directed or where customer acquisition efforts are focused.
+      data_type: VARCHAR
+- name: triple_whale
+  tables:
+  - name: triple_whale.orders_with_journeys
+    description: This table stores customer orders along with their associated customer
+      journey details.
+    columns:
+    - name: order_id
+      description: A unique system-generated identifier for every distinct customer
+        order, enabling its tracking through various stages of the journey.
+      data_type: VARCHAR
+    - name: order_name
+      description: The descriptive name or title assigned to each order for clear
+        identification and reference.
+      data_type: VARCHAR
+    - name: total_price
+      description: The aggregated final price of an order, including all applicable
+        taxes and discounts.
+      data_type: FLOAT
+    - name: currency
+      description: The three-letter ISO currency code representing the currency in
+        which the order's monetary values are expressed.
+      data_type: VARCHAR
+    - name: created_at
+      description: The date and time this order journey record was created.
+      data_type: TIMESTAMP
+    - name: customer_id
+      description: Identifies the unique customer associated with each order or journey
+        record.
+      data_type: VARCHAR
+    - name: attribution
+      description: The marketing channel or source credited with generating the order.
+      data_type: STRUCT<firstClick ARRAY<STRUCT<source STRING, campaignId STRING,
+        adsetId STRING, adId STRING, clickDate TIMESTAMP>>, lastClick ARRAY<STRUCT<source
+        STRING, campaignId STRING, adsetId STRING, adId STRING, clickDate TIMESTAMP>>,
+        fullFirstClick ARRAY<STRUCT<source STRING, campaignId STRING, adsetId STRING,
+        adId STRING, clickDate TIMESTAMP>>, fullLastClick ARRAY<STRUCT<source STRING,
+        campaignId STRING, adsetId STRING, adId STRING, clickDate TIMESTAMP>>, lastPlatformClick
+        ARRAY<STRUCT<source STRING, campaignId STRING, adsetId STRING, adId STRING,
+        clickDate TIMESTAMP>>, linear ARRAY<STRUCT<source STRING, campaignId STRING,
+        adsetId STRING, adId STRING, clickDate TIMESTAMP>>, linearAll ARRAY<STRUCT<source
+        STRING, campaignId STRING, adsetId STRING, adId STRING, clickDate TIMESTAMP>>>
+    - name: attribution.firstClick
+      description: Identifies the marketing channel or source of the first recorded
+        click a customer made before placing an order.
+      data_type: ARRAY
+    - name: attribution.lastClick
+      description: The marketing channel or source of the customer's last click immediately
+        preceding the order.
+      data_type: ARRAY
+    - name: attribution.fullFirstClick
+      description: The complete identifier of the very first marketing touchpoint
+        a customer engaged with prior to placing an order.
+      data_type: ARRAY
+    - name: attribution.fullLastClick
+      description: This column indicates the specific marketing touchpoint (e.g.,
+        ad click) that directly led to an order, receiving all credit under a full
+        last-click attribution model.
+      data_type: ARRAY
+    - name: attribution.lastPlatformClick
+      description: The platform associated with the customer's last click immediately
+        preceding an order, used for attribution purposes.
+      data_type: ARRAY
+    - name: attribution.linear
+      description: 'Conn Error: HTTPSConnectionPool(host=''generativelanguage.googleapis.com'',
+        port=443): Read timed out. (read timeout=15)'
+      data_type: ARRAY
+    - name: attribution.linearAll
+      description: The order value attributed using a linear model, equally distributing
+        credit across all customer journey touchpoints.
+      data_type: ARRAY
+    - name: journey
+      description: Describes the chronological progression of an order through its
+        various statuses, from initial placement to final delivery.
+      data_type: ARRAY
+    - name: ingestion_timestamp
+      description: The timestamp indicating when the order journey record was loaded
+        into this table.
+      data_type: TIMESTAMP
+    - name: gcs_source_uri
+      description: The Google Cloud Storage URI specifying the original source file
+        used to ingest this order or journey record.
+      data_type: VARCHAR
