@@ -4,21 +4,23 @@ description: AI-powered Data Governance & Quality Tool.
 # ✅ THEME SETTINGS
 remote_theme: just-the-docs/just-the-docs
 
-# ✅ URL SETTINGS (Critical for CSS to load)
+# ✅ URL SETTINGS (Critical!)
 url: "https://salma71.github.io"
 baseurl: "/QualiDB"
+
+# ✅ PLUGINS
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-include-cache
 
 # SITE SETTINGS
 color_scheme: light
 search_enabled: true
 heading_anchors: true
 
-# NAVIGATION & FOOTER
+# NAVIGATION
 aux_links:
   "View on GitHub": "https://salma71.github.io/QualiDB/"
-footer_content: "Copyright &copy; 2025 QualiDB AI"
 
-# PLUGINS
-plugins:
-  - jekyll-remote-theme
-  - jekyll-seo-tag
+footer_content: "Copyright &copy; 2025 QualiDB AI"
