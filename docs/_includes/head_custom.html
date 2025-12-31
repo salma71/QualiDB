@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="/assets/css/mermaid-zoom.css">
+
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        // 1. Find all code blocks (Jekyll usually wraps them in .language-mermaid)
+        // We also check for 'code.language-mermaid' just in case.
+        const codeBlocks = document.querySelectorAll('.language-mermaid, code.language-mermaid');
+        const mermaidNodes = [];
+
+        codeBlocks.forEach((codeBlock) => {
+            // 2. Extract the diagram text
+            const mermaidSource = codeBlock.textContent.trim();
+
+            // 3. Create the div structure Mermaid needs
+            const div = document.createElement('div');
+            div.className = 'mermaid';
+            div.textContent = mermaidSource;
+
+            // 4. Find the actual container to replace (handling different Jekyll layouts)
+            // Usually <div class="highlighter-rouge"> or <pre>
+            const pre = codeBlock.closest('pre');
+            const container = (pre && pre.parentNode) ? pre.parentNode : codeBlock;
+            const targetToReplace = container.closest('div.highlighter-rouge') || container;
+
+            // 5. Swap the text block with the Mermaid div
+            if (targetToReplace && targetToReplace.parentNode) {
+                targetToReplace.parentNode.replaceChild(div, targetToReplace);
+                mermaidNodes.push(div);
+            }
+        });
+
+        // 6. Run Mermaid
+        if (mermaidNodes.length > 0) {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+            });
+            await mermaid.run({ nodes: mermaidNodes });
+        }
+    });
+</script>
+
+<script src="/assets/js/mermaid-zoom.js" defer></script>

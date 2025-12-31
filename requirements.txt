@@ -1,0 +1,13 @@
+click
+sqlalchemy
+pyyaml
+tabulate
+openai
+questionary
+tiktoken
+google-cloud-bigquery
+google-cloud-bigquery-storage
+google-genai
+python-dotenv
+requests
+anthropic
