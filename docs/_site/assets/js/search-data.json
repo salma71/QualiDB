@@ -1,0 +1,184 @@
+{"0": {
+    "doc": "Architecture",
+    "title": "🏗️ System Architecture",
+    "content": "QualiDB is designed as a modular CLI application that bridges the gap between your raw database schema and Large Language Models (LLMs). | 🧩 High-Level Design | 🔄 Data Flow . | 1. Documentation Generation | 2. Data Quality Checks | . | 🛠️ Technology Stack | . ",
+    "url": "/QualiDB/architecture.html#%EF%B8%8F-system-architecture",
+    
+    "relUrl": "/architecture.html#️-system-architecture"
+  },"1": {
+    "doc": "Architecture",
+    "title": "🧩 High-Level Design",
+    "content": "The tool consists of three main components: . | CLI Interface (Click): Handles user commands, menus, and configuration. | Database Engine (SQLAlchemy): Connects to BigQuery, Snowflake, or Postgres to fetch schemas and metadata. | AI Engine: Interacts with Claude, Gemini, or OpenAI to generate business-context descriptions. | . [Image of software architecture diagram] . ",
+    "url": "/QualiDB/architecture.html#-high-level-design",
+    
+    "relUrl": "/architecture.html#-high-level-design"
+  },"2": {
+    "doc": "Architecture",
+    "title": "🔄 Data Flow",
+    "content": "1. Documentation Generation . When you run generate-schema, the data flows as follows: . | Extraction: The tool queries information_schema to get table and column names. | Prompting: It constructs a prompt: “Write a 1-sentence description for column ‘created_at’ in table ‘orders’…” | AI Processing: The LLM returns a clean description (e.g., “Timestamp when the order was placed.”). | Storage: The result is saved to a local models/schema.yml file for review. | . 2. Data Quality Checks . When you run check-quality: . | Introspection: The tool detects column types (e.g., finds all TIMESTAMP columns). | Query Generation: It builds SQL queries dynamically: SELECT MAX(ingested_at) FROM `project.dataset.table` . | Analysis: It compares the result against thresholds (e.g., &gt; 24 hours old). | Reporting: Results are printed to the terminal in an ASCII table. | . Flow Diagram: . Flow Diagram: . flowchart TD %% Setup Phase subgraph Setup [1. Initialization] direction TB Start([Start]) --&gt; CheckConn{Conn db String?} CheckConn -- No --&gt; Prompt[Prompt User] CheckConn -- Yes --&gt; Connect Connect --&gt; FetchSchema[Select Schema &amp; Tables] end %% Analysis Phase subgraph Analysis [2. Data Quality Loop] direction TB FetchSchema --&gt; LoopT[Loop: Each Table] LoopT --&gt; FetchCol[Fetch Columns] FetchCol --&gt; LoopC[Loop: Each Column] LoopC --&gt; CheckType{Check Type} CheckType --&gt;|Freshness| Q1[Query: MAX Date] CheckType --&gt;|Nulls| Q2[Query: Count NULLs] CheckType --&gt;|Unique| Q3[Query: Count Distinct] Q1 --&gt; Store[Store Result] Q2 --&gt; Store Q3 --&gt; Store Store --&gt; LoopC LoopC -- Next Col --&gt; LoopT end %% Reporting Phase subgraph Report [3. Output] direction TB LoopT -- Done --&gt; Display[Print ASCII Table] Display --&gt; End([End]) end %% Styles for a cleaner look classDef box fill:#f9f9f9,stroke:#333,stroke-width:1px; classDef decision fill:#e1f5fe,stroke:#01579b,stroke-width:2px; classDef term fill:#333,stroke:#333,color:#fff; class Setup,Analysis,Report box; class CheckConn,CheckType decision; class Start,End term; . ",
+    "url": "/QualiDB/architecture.html#-data-flow",
+    
+    "relUrl": "/architecture.html#-data-flow"
+  },"3": {
+    "doc": "Architecture",
+    "title": "🛠️ Technology Stack",
+    "content": "| Component | Library/Tool | Purpose | . | Language | Python 3.10+ | Core logic | . | CLI | click, questionary | Interactive menus and flags | . | Database | sqlalchemy | Unified interface for SQL DBs | . | AI | anthropic, openai | API wrappers for LLMs | . | Testing | pytest | Unit and integration testing | . ",
+    "url": "/QualiDB/architecture.html#%EF%B8%8F-technology-stack",
+    
+    "relUrl": "/architecture.html#️-technology-stack"
+  },"4": {
+    "doc": "Architecture",
+    "title": "Architecture",
+    "content": " ",
+    "url": "/QualiDB/architecture.html",
+    
+    "relUrl": "/architecture.html"
+  },"5": {
+    "doc": "CLI Reference",
+    "title": "⚙️ CLI Reference",
+    "content": "QualiDB is designed for interactivity, but it also supports robust command-line flags. These options allow you to automate workflows, integrate with CI/CD pipelines, or simply bypass the interactive menus. | Global Options | The Checks . | 🕒 Freshness | 🚫 Null Values | 🆔 Uniqueness | . | Automatic Reporting | Commands . | 1. generate-schema | 2. check-quality | 3. push-to-db | . | . ",
+    "url": "/QualiDB/cli.html#%EF%B8%8F-cli-reference",
+    
+    "relUrl": "/cli.html#️-cli-reference"
+  },"6": {
+    "doc": "CLI Reference",
+    "title": "Global Options",
+    "content": "These flags can be used with any command to configure the runtime environment. | Flag | Description | Example | . | --conn | Connection String: Pass a SQLAlchemy connection string directly to bypass the interactive database selector. | bigquery://project_id:dataset_id | . | --help | Help: Show the help message and exit. | python db_check.py --help | . ",
+    "url": "/QualiDB/cli.html#global-options",
+    
+    "relUrl": "/cli.html#global-options"
+  },"7": {
+    "doc": "CLI Reference",
+    "title": "The Checks",
+    "content": "🕒 Freshness . | Logic: Automatically detects TIMESTAMP and DATE columns. Calculates the time difference between NOW() and the maximum value in that column. | Alert: Flags data older than 24 hours as ⚠️ OLD. | . 🚫 Null Values . | Logic: Scans columns for missing data (NULL). | Alert: Returns ❌ FAIL if any nulls are found in critical columns. | . 🆔 Uniqueness . | Logic: Checks Primary Keys or ID columns for duplicate entries. | Alert: Returns ❌ FAIL if COUNT(DISTINCT col) != COUNT(col). | . ",
+    "url": "/QualiDB/cli.html#the-checks",
+    
+    "relUrl": "/cli.html#the-checks"
+  },"8": {
+    "doc": "CLI Reference",
+    "title": "Automatic Reporting",
+    "content": "Results are displayed in a high-contrast ASCII table directly in your terminal, making it easy to spot failures at a glance. ",
+    "url": "/QualiDB/cli.html#automatic-reporting",
+    
+    "relUrl": "/cli.html#automatic-reporting"
+  },"9": {
+    "doc": "CLI Reference",
+    "title": "Commands",
+    "content": "1. generate-schema . Description: Triggers the AI documentation workflow. It scans your schema and uses an LLM to generate business-friendly descriptions. Usage: . python db_check.py generate-schema [OPTIONS] --conn The database connection string (prompts if not provided). --output Path to output file. (Default: models/schema.yml) --model AI Model to use. (Default: gpt-3.5-turbo) --write-db Write descriptions directly to the database. (Flag) --help Show this message and exit. 2. check-quality . Description: Runs the automated data quality inspector. It checks for freshness, null values, and uniqueness constraints. Usage: . python db_check.py check-quality [OPTIONS] --conn The database connection string. (Env: DB_CONNECTION_STRING) --help Show this message and exit. 3. push-to-db . Description: Reads your local documentation file (schema.yml) and pushes the descriptions back to the database using COMMENT ON or ALTER TABLE statements. Usage: . python db_check.py push-to-db [OPTIONS] --input Path to the YAML file containing the descriptions. (Default: models/schema.yml) --conn The database connection string. (Env: DB_CONNECTION_STRING) --help Show this message and exit. Example: . python db_check.py push-to-db --conn \"bigquery://project_id:dataset_id\" . ",
+    "url": "/QualiDB/cli.html#commands",
+    
+    "relUrl": "/cli.html#commands"
+  },"10": {
+    "doc": "CLI Reference",
+    "title": "CLI Reference",
+    "content": " ",
+    "url": "/QualiDB/cli.html",
+    
+    "relUrl": "/cli.html"
+  },"11": {
+    "doc": "Getting Started",
+    "title": "🚀 Getting Started with QualiDB",
+    "content": "QualiDB is an all-in-one Data Governance assistant. It uses AI to document your database and automated checks to ensure data quality. | 🛠️ Prerequisites | 📥 Installation | AI Provider Keys (Only one is required) | Database Connection (Optional, can be passed via CLI) | . ",
+    "url": "/QualiDB/get_started.html#-getting-started-with-qualidb",
+    
+    "relUrl": "/get_started.html#-getting-started-with-qualidb"
+  },"12": {
+    "doc": "Getting Started",
+    "title": "🛠️ Prerequisites",
+    "content": "Before running the tool, ensure you have: . | Python 3.10+ installed. | Access to a database (BigQuery, PostgreSQL, Snowflake, or SQLite). | An API Key for your preferred AI provider: . | ANTHROPIC_API_KEY (Claude - Recommended) | GOOGLE_API_KEY (Gemini) | OPENAI_API_KEY (GPT-4) | . | . ",
+    "url": "/QualiDB/get_started.html#%EF%B8%8F-prerequisites",
+    
+    "relUrl": "/get_started.html#️-prerequisites"
+  },"13": {
+    "doc": "Getting Started",
+    "title": "📥 Installation",
+    "content": ". | Clone the repository: git clone [https://github.com/YOUR_USERNAME/QualiDB.git](https://github.com/YOUR_USERNAME/QualiDB.git) cd QualiDB . | Create a virtual environment: python -m venv .venv source .venv/bin/activate # On Windows: .venv\\Scripts\\activate . | Install dependencies: pip install -r requirements.txt . | Configure Environment Variables: Create a .env file in the root directory and add your keys: ```bash ",
+    "url": "/QualiDB/get_started.html#-installation",
+    
+    "relUrl": "/get_started.html#-installation"
+  },"14": {
+    "doc": "Getting Started",
+    "title": "AI Provider Keys (Only one is required)",
+    "content": "ANTHROPIC_API_KEY=”sk-ant-…” GOOGLE_API_KEY=”AIza…” OPENAI_API_KEY=”sk-…” . ",
+    "url": "/QualiDB/get_started.html#ai-provider-keys-only-one-is-required",
+    
+    "relUrl": "/get_started.html#ai-provider-keys-only-one-is-required"
+  },"15": {
+    "doc": "Getting Started",
+    "title": "Database Connection (Optional, can be passed via CLI)",
+    "content": "| . ",
+    "url": "/QualiDB/get_started.html#database-connection-optional-can-be-passed-via-cli",
+    
+    "relUrl": "/get_started.html#database-connection-optional-can-be-passed-via-cli"
+  },"16": {
+    "doc": "Getting Started",
+    "title": "Getting Started",
+    "content": " ",
+    "url": "/QualiDB/get_started.html",
+    
+    "relUrl": "/get_started.html"
+  },"17": {
+    "doc": "Getting Started",
+    "title": "🚀 Getting Started with QualiDB",
+    "content": "QualiDB is an all-in-one Data Governance assistant. It uses AI to document your database and automated checks to ensure data quality. | 🛠️ Prerequisites | 📥 Installation | AI Provider Keys (Only one is required) | Database Connection (Optional, can be passed via CLI) | . ",
+    "url": "/QualiDB/#-getting-started-with-qualidb",
+    
+    "relUrl": "/#-getting-started-with-qualidb"
+  },"18": {
+    "doc": "Getting Started",
+    "title": "🛠️ Prerequisites",
+    "content": "Before running the tool, ensure you have: . | Python 3.10+ installed. | Access to a database (BigQuery, PostgreSQL, Snowflake, or SQLite). | An API Key for your preferred AI provider: . | ANTHROPIC_API_KEY (Claude - Recommended) | GOOGLE_API_KEY (Gemini) | OPENAI_API_KEY (GPT-4) | . | . ",
+    "url": "/QualiDB/#%EF%B8%8F-prerequisites",
+    
+    "relUrl": "/#️-prerequisites"
+  },"19": {
+    "doc": "Getting Started",
+    "title": "📥 Installation",
+    "content": ". | Clone the repository: git clone [https://github.com/YOUR_USERNAME/QualiDB.git](https://github.com/YOUR_USERNAME/QualiDB.git) cd QualiDB . | Create a virtual environment: python -m venv .venv source .venv/bin/activate # On Windows: .venv\\Scripts\\activate . | Install dependencies: pip install -r requirements.txt . | Configure Environment Variables: Create a .env file in the root directory and add your keys: ```bash ",
+    "url": "/QualiDB/#-installation",
+    
+    "relUrl": "/#-installation"
+  },"20": {
+    "doc": "Getting Started",
+    "title": "AI Provider Keys (Only one is required)",
+    "content": "ANTHROPIC_API_KEY=”sk-ant-…” GOOGLE_API_KEY=”AIza…” OPENAI_API_KEY=”sk-…” . ",
+    "url": "/QualiDB/#ai-provider-keys-only-one-is-required",
+    
+    "relUrl": "/#ai-provider-keys-only-one-is-required"
+  },"21": {
+    "doc": "Getting Started",
+    "title": "Database Connection (Optional, can be passed via CLI)",
+    "content": "| . ",
+    "url": "/QualiDB/#database-connection-optional-can-be-passed-via-cli",
+    
+    "relUrl": "/#database-connection-optional-can-be-passed-via-cli"
+  },"22": {
+    "doc": "Getting Started",
+    "title": "Getting Started",
+    "content": " ",
+    "url": "/QualiDB/",
+    
+    "relUrl": "/"
+  },"23": {
+    "doc": "Sample Output",
+    "title": "📄 Sample Output",
+    "content": "See examples of what QualiDB generates for your project. | 1. Generated Documentation (schema.yml) | . ",
+    "url": "/QualiDB/sample_output.html#-sample-output",
+    
+    "relUrl": "/sample_output.html#-sample-output"
+  },"24": {
+    "doc": "Sample Output",
+    "title": "1. Generated Documentation (schema.yml)",
+    "content": "When you run the Generate Documentation command, QualiDB uses AI to write descriptions and saves them to models/schema.yml. Terminal Output: . ~/Desktop/QualiDB via 🐍 v3.11.6 (.venv) &gt; python db_check.py ? Select tables: (Use arrow keys to move, &lt;space&gt; to select, &lt;a&gt; to toggle, &lt;i&gt; to invert) ○ (Exit) ○ shipstation_raw.carriers ○ shipstation_raw.fulfillments ○ shipstation_raw.marketplaces ○ shipstation_raw.orders ○ shipstation_raw.products » ● shipstation_raw.shipments ○ shipstation_raw.stores ○ shipstation_raw.users ○ shipstation_raw.warehouses . Quality Check Results: . Scanning 2 tables in 'shipstation_raw'... 🏃 Scanning [####################################] 100% ┌───────────┬──────────────┬───────────┬──────────────────┬──────────┐ │ Table │ Column │ Check │ Result │ Status │ ├───────────┼──────────────┼───────────┼──────────────────┼──────────┤ │ shipments │ shipment_id │ Unique │ PASS │ ✅ │ │ shipments │ ship_date │ Freshness │ 4.2h ago │ ✅ │ │ shipments │ tracking_no │ Nulls │ FAIL (5 nulls) │ ❌ │ └───────────┴──────────────┴───────────┴──────────────────┴──────────┘ . Command: . python db_check.py generate-schema . Output: . version: 2 models: - name: users description: \"Registry of all customer accounts created via the mobile app.\" columns: - name: email description: \"Primary contact email; must be unique per user.\" . ",
+    "url": "/QualiDB/sample_output.html#1-generated-documentation-schemayml",
+    
+    "relUrl": "/sample_output.html#1-generated-documentation-schemayml"
+  },"25": {
+    "doc": "Sample Output",
+    "title": "Sample Output",
+    "content": " ",
+    "url": "/QualiDB/sample_output.html",
+    
+    "relUrl": "/sample_output.html"
+  }
+}

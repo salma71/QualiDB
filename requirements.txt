@@ -1,6 +1,7 @@
 click
 sqlalchemy
 pyyaml
+polars
 tabulate
 openai
 questionary
